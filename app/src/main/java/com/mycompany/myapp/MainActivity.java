@@ -25,11 +25,24 @@ import android.util.Log;
 import android.graphics.Bitmap;
 import android.webkit.WebResourceResponse;
 import java.net.URL;
+import com.alibaba.fastjson.JSON;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import com.alibaba.fastjson.TypeReference;
+import me.xdrop.fuzzywuzzy.FuzzySearch;
+import android.text.TextUtils;
 
 public class MainActivity extends AppCompatActivity {
 
 	CustomActionWebView mWebView;
 	String url = "https://m.examcoo.com/";
+    String dbStr = "";
+    List<LocalExam> allLocalDB;
+    
+    List<String> result = new ArrayList<String>();
+    int index=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +57,63 @@ public class MainActivity extends AppCompatActivity {
 		initWebSettings();	
 		initWebViewClient();
 		initLong();
+        
+        try {
+            dbStr = readDb();
+            allLocalDB = JSON.parseArray(dbStr, LocalExam.class);
+            
+            Toast.makeText(MainActivity.this, "Load DB success ->" + allLocalDB.size(), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        Button next = findViewById(R.id.btn_next);
+        Button pre = findViewById(R.id.btn_pre);
+        Button show = findViewById(R.id.btn_show);
+        next.setOnClickListener(new View.OnClickListener(){
 
+                @Override
+                public void onClick(View p1) {
+                    try{
+                        {
+                            if (index == 0) return;
+                            index --;
+                            Toast.makeText(MainActivity.this, "" + index + "\n" +result.get(index), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch(Exception e){
+                        
+                    }
+                }
+            });
+        pre.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View p1) {
+                    try{
+                        {
+                            if (index == 0) return;
+                            index ++;
+                            Toast.makeText(MainActivity.this, "" + index + "\n" +result.get(index), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch(Exception e){
+
+                    }
+                }
+            });
+        show.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View p1) {
+                    try{
+                        {
+                            
+                            Toast.makeText(MainActivity.this, "" + index + "\n" +result.get(index), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch(Exception e){
+
+                    }
+                }
+            });
     }
 
 	@Override
@@ -156,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void loadExam(final String url) {
+        result.clear();
 		Thread laodThread = new Thread(new Runnable(){
 
 				@Override
@@ -167,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
 							@Override
 							public void run() {
 								Toast.makeText(MainActivity.this, "success", Toast.LENGTH_SHORT).show();
+                                praseExamJson(examStr);
 							}
 						}
 					);
@@ -175,4 +246,53 @@ public class MainActivity extends AppCompatActivity {
 		laodThread.start();
 	}
 
+    
+    private void praseExamJson(String json){
+        NewBean allbean = JSON.parseObject(json, NewBean.class);
+        Toast.makeText(MainActivity.this, allbean.getData().getResult().getB().get(0).getA(), Toast.LENGTH_SHORT).show();
+        
+        List exams = allbean.getData().getResult().getB();
+        
+        for(NewBean.Data.Result.B b: exams){
+            if(TextUtils.isEmpty(b.getA())){
+                result.add("unknown");
+                continue;
+            }
+            result.add(getAnswer(b.getA()));
+        }
+        Toast.makeText(MainActivity.this, "quean success" + result.size(), Toast.LENGTH_SHORT).show();
+        
+    }
+    
+    
+    private String readDb() throws FileNotFoundException, IOException{
+        BufferedReader br = new BufferedReader(new FileReader("/storage/emulated/0/题库序列化.json"));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            return sb.toString();
+        } finally {
+            br.close();
+        }
+    }
+    
+    
+    String getAnswer(String qiestion){
+        int max = 0;
+        String result = "";
+        for(LocalExam localExam : allLocalDB){
+            int ratio = FuzzySearch.ratio(qiestion, localExam.getQuestion());
+            if (ratio > max){
+                max = ratio;
+                result = localExam.getQuestion() + "\n" + localExam.getAnswer();
+            }
+        }
+        return result;
+    }
 }
