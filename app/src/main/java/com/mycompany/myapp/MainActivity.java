@@ -33,6 +33,8 @@ import java.io.IOException;
 import com.alibaba.fastjson.TypeReference;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import android.text.TextUtils;
+import android.widget.LinearLayout;
+import tech.gujin.toast.ToastUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 	String url = "https://m.examcoo.com/";
     String dbStr = "";
     List<LocalExam> allLocalDB;
+    LinearLayout controlOut;
     
     List<String> result = new ArrayList<String>();
     int index=1;
@@ -49,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ToastUtil.initialize(this, ToastUtil.Mode.REPLACEABLE);
+        
+        controlOut = findViewById(R.id.ll_con_out);
+        controlOut.setVisibility(View.GONE);
+        
 		Log.d("ksk", "init");
 
 		mWebView = findViewById(R.id.activity_mainWebView);
@@ -67,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         
-        Button next = findViewById(R.id.btn_next);
-        Button pre = findViewById(R.id.btn_pre);
-        Button show = findViewById(R.id.btn_show);
+        View next = findViewById(R.id.btn_next);
+        View pre = findViewById(R.id.btn_pre);
+        View show = findViewById(R.id.btn_show);
         next.setOnClickListener(new View.OnClickListener(){
 
                 @Override
@@ -78,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         {
                             if (index == 0) return;
                             index --;
-                            Toast.makeText(MainActivity.this, "" + index + "\n" +result.get(index), Toast.LENGTH_SHORT).show();
+                            ToastUtil.show( "" + index + "\n" +result.get(index));
                         }
                     } catch(Exception e){
                         
@@ -93,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         {
                             if (index == 0) return;
                             index ++;
-                            Toast.makeText(MainActivity.this, "" + index + "\n" +result.get(index), Toast.LENGTH_SHORT).show();
+                            ToastUtil.show( "" + index + "\n" +result.get(index));
                         }
                     } catch(Exception e){
 
@@ -107,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     try{
                         {
                             
-                            Toast.makeText(MainActivity.this, "" + index + "\n" +result.get(index), Toast.LENGTH_SHORT).show();
+                            ToastUtil.show( "" + index + "\n" +result.get(index));
                         }
                     } catch(Exception e){
 
@@ -225,6 +233,14 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void loadExam(final String url) {
+        MainActivity.this.runOnUiThread(new Runnable(){
+
+                @Override
+                public void run() {
+                    controlOut.setVisibility(View.VISIBLE);
+                }
+            });
+        
         result.clear();
 		Thread laodThread = new Thread(new Runnable(){
 

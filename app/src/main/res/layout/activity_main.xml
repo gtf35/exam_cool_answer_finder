@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:fitsSystemWindows="true"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
@@ -12,34 +13,48 @@
 		android:layout_height="0dp"
 		android:layout_weight="1.0"/>
 
-	<LinearLayout
-		android:orientation="horizontal"
+	<FrameLayout
 		android:layout_width="match_parent"
-		android:layout_height="20dp">
+		android:layout_height="wrap_content">
 
-		<Button
-			android:layout_width="0dp"
+		<ImageView
+			android:clickable="false"
+			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-            android:layout_weight="1.0"
-			android:text="&gt;"
-			android:id="@+id/btn_next"/>
+			android:background="@drawable/line_shape"
+			android:layout_marginStart="30dp"
+			android:layout_marginEnd="30dp"
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="5dp"/>
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:text="show"
-			android:id="@+id/btn_show"/>
-        
-		<Button
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-            android:layout_weight="1.0"
-			android:text="&lt;"
-			android:id="@+id/btn_pre"/>
+		<LinearLayout
+			android:background="#FF3C7B9A"
+			android:id="@+id/ll_con_out"
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="20dp">
 
+			<View
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1.0"
+				android:id="@+id/btn_next"/>
 
-	</LinearLayout>
+			<View
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1.0"
+				android:id="@+id/btn_show"/>
+
+			<View
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1.0"
+				android:id="@+id/btn_pre"/>
+
+		</LinearLayout>
+
+	</FrameLayout>
 
 </LinearLayout>
 

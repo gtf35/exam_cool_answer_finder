@@ -29,5 +29,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 	compile 'com.github.CarGuo:CustomActionWebView:v1.0.1'
 	compile  'com.alibaba:fastjson:1.1.72.android'
+    compile 'tech.gujin:toast-util:1.1.1'
 
 }
