@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             dbStr = readDb();
             allLocalDB = JSON.parseArray(dbStr, LocalExam.class);
             
-            Toast.makeText(MainActivity.this, "Load DB success ->" + allLocalDB.size(), Toast.LENGTH_SHORT).show();
+            ToastUtil.show("Load DB success -> " + allLocalDB.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
             }
             result.add(getAnswer(b.getA()));
         }
-        Toast.makeText(MainActivity.this, "quean success" + result.size(), Toast.LENGTH_SHORT).show();
+        ToastUtil.show("quean success -> " + result.size());
         
     }
     
