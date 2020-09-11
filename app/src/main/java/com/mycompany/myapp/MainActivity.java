@@ -16,8 +16,6 @@ import android.webkit.WebView;
 import android.webkit.WebSettings;
 import java.util.ArrayList;
 import java.util.List;
-import com.shuyu.action.web.CustomActionWebView;
-import com.shuyu.action.web.ActionSelectListener;
 import android.widget.Toast;
 import android.webkit.WebViewClient;
 import android.webkit.WebResourceRequest;
@@ -38,7 +36,7 @@ import tech.gujin.toast.ToastUtil;
 
 public class MainActivity extends AppCompatActivity {
 
-	CustomActionWebView mWebView;
+	WebView mWebView;
 	String url = "https://m.examcoo.com/";
     String dbStr = "";
     List<LocalExam> allLocalDB;
